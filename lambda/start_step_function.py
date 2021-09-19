@@ -21,7 +21,8 @@ def lambda_handler(event, context):
         if len(event["Records"][0]['s3']['object']['key'].split('/')) != 3:
             raise Exception("File must be put in a schema folder")
         schema_name = key_name.split('/')[1]
-        state_machine_arn = "arn:aws:states:us-west-1:541253215789:stateMachine:de-etl-manual-dummy"
+        state_machine_arn = os.environ['STEP_FUNC_ARN']
+
         trigger_pipeline_by_key(state_machine_arn, bucket_name, bucket_arn, key_name, file_name, schema_name)
         print(bucket_name)
         print(key_name)

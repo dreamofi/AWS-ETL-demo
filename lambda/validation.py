@@ -19,12 +19,13 @@ def lambda_handler(event, context):
     key_name = event['key_name']
     source_file_name = event['file_name']
     schema_file_name = event['schema_name'] + '.json'
+    schema_folder = "/" + str(os.environ['schema_folder_name']) + "/"
 
     # source_file_name_to_copy = bucket_name + "/" + key_name
     # error_file_name="error/" + source_file_name
 
     # Read schema
-    schema_file_path = "s3://" + bucket_name + "/schema/" + schema_file_name
+    schema_file_path = "s3://" + bucket_name + schema_folder + schema_file_name
 
     try:
         schema = json.loads(s3_resource.Object(
@@ -33,7 +34,7 @@ def lambda_handler(event, context):
     except:
         result['Validation'] = "FAILURE"
         result['Reason'] = "Errro while reading schema"
-        result['Location'] = "schema"
+        result['Location'] = os.environ["schema_folder_name"]
         print("Error while reading schema")
         return(result)
 
@@ -56,7 +57,7 @@ def lambda_handler(event, context):
     except:
         result['Validation'] = "FAILURE"
         result['Reason'] = "Errro while reading csv"
-        result['Location'] = "source"
+        result['Location'] = os.environ['source_folder_name'] 
         print("Error while reading csv")
         return(result)
 
@@ -65,19 +66,19 @@ def lambda_handler(event, context):
     df_dict = df.to_dict(orient='records')
 
     transformed_file_name = "s3://" + bucket_name + "/" + \
-        "stage" + "/" + source_file_name
+        str(os.environ['stage_folder_name']) + "/" + source_file_name
 
     if len(df_dict) == 0:
         result['Validation'] = "FAILURE"
         result['Reason'] = "NO RECORD FOUND"
-        result['Location'] = "source"
+        result['Location'] = os.environ['source_folder_name']
         print("Moving file to error folder")
         return(result)
     for idx, record in enumerate(df_dict):
         if not v.validate(record):
             result['Validation'] = "FAILURE"
             result['Reason'] = str(v.errors) + " in record number " + str(idx)
-            result['Location'] = "source"
+            result['Location'] = os.environ['source_folder_name']
             print("Moving file to error folder")
             return(result)
             break
@@ -92,7 +93,7 @@ def lambda_handler(event, context):
     except:
         result['Validation'] = "FAILURE"
         result['Reason'] = "Can't save to stage"
-        result['Location'] = "stage"
+        result['Location'] = os.environ['stage_folder_name']
         print("check", check)
         return result
     print("Successfuly moved file to  : " + transformed_file_name)
