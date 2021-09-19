@@ -34,9 +34,10 @@ Parameters:
     Description: "Source Folder to upload raw csv dataset to trigger the AWS Step functions"
     Default: "source"
 
-  pDatasetSchema:
+  pDatasetSchemaFolder:
     Type: String
-    Description: "Expected Schema for the source DatasetSchema"
+    Description: "Expected Schema folder for the source DatasetSchema"
+    Default: "schema"
 
   pEmailforNotification:
     Description: "Valid email address to send success or error notification"
@@ -56,7 +57,7 @@ Resources:
     Properties:
       ServiceToken: !GetAtt LambdaFunctionS3Object.Arn
       the_bucket: !Ref S3Bucket
-      dirs_to_create: !Join [ ",", [!Ref pSourceFolder,!Ref pStageFolder,!Ref pErrorFolder,!Ref pArchiveFolder,!Ref pTransformFolder]]
+      dirs_to_create: !Join [ ",", [!Ref pSourceFolder,!Ref pDatasetSchemaFolder,!Ref pStageFolder,!Ref pErrorFolder,!Ref pArchiveFolder,!Ref pTransformFolder]]
       file_prefix: "glue/gluejob.py"
       file_content: !Sub |
         import sys
@@ -465,7 +466,7 @@ Resources:
         Variables:
           stage_folder_name: !Ref pStageFolder
           source_folder_name: !Ref pSourceFolder
-          schema: !Ref pDatasetSchema
+          schema_folder_name: !Ref pDatasetSchemaFolder
 
   StartCodeBuildProjectFunction:
     Type: AWS::Serverless::Function

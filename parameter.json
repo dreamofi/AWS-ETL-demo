@@ -1,0 +1,34 @@
+[
+  {
+    "ParameterKey": "pS3BucketName",
+    "ParameterValue": "unique-bucket-name-dummy-2021"
+  },
+  {
+    "ParameterKey": "pSourceFolder",
+    "ParameterValue": "source"
+  },
+  {
+    "ParameterKey": "pStageFolder",
+    "ParameterValue": "stage"
+  },
+  {
+    "ParameterKey": "pTransformFolder",
+    "ParameterValue": "transform"
+  },
+  {
+    "ParameterKey": "pErrorFolder",
+    "ParameterValue": "error"
+  },
+  {
+    "ParameterKey": "pArchiveFolder",
+    "ParameterValue": "archive"
+  },
+  {
+    "ParameterKey": "pEmailforNotification",
+    "ParameterValue": "valid-email@xyz.com"
+  },
+  {
+    "ParameterKey": "pDatasetSchemaFolder",
+    "ParameterValue": "schema"
+  }
+]

@@ -8,7 +8,7 @@ import os
 
 def lambda_handler(event, context):
     '''
-    This function validates input raw dataset against schema specified in the env variable
+    This function validates input raw dataset against schema in the schema folder
     '''
 
     print(event)
